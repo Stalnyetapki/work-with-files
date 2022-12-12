@@ -2,7 +2,9 @@ package guru.qa.tests;
 
 import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
+import guru.qa.models.CurrenciesSettings;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -11,14 +13,16 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UnpackingAndParsingZipFileTests {
+public class ParsingFileTests {
 
-    ClassLoader cl = UnpackingAndParsingZipFileTests.class.getClassLoader();
+    ClassLoader cl = ParsingFileTests.class.getClassLoader();
 
     @Test
-    void zipParseTest() throws Exception {
+    void UnpackingAndParseZipFilesTest() throws Exception {
+
         try (
                 InputStream resource = cl.getResourceAsStream("files/test.zip");
                 ZipInputStream zis = new ZipInputStream(resource)
@@ -38,5 +42,23 @@ public class UnpackingAndParsingZipFileTests {
                 }
             }
         }
+    }
+
+    @Test
+    void currenciesSettingsJsonParseTest() throws Exception {
+
+        try (InputStream resource = cl.getResourceAsStream("files/response.json")) {
+            ObjectMapper mapper = new ObjectMapper();
+            CurrenciesSettings currenciesSettings = mapper.readValue(resource, CurrenciesSettings.class);
+            assertThat(currenciesSettings.isGameFiat).isFalse();
+            assertThat(currenciesSettings.isFixedRate).isTrue();
+            assertThat(currenciesSettings.isViewFiat).isTrue();
+            assertThat(currenciesSettings.currencies.get(0).currencyCode).isEqualTo("ALL");
+            assertThat(currenciesSettings.currencies.get(0).id).isEqualTo("e69bb7cf-d0b1-4be5-9319-edd6447091cb");
+            assertThat(currenciesSettings.currencies.get(1).currencyCode).isEqualTo("AMD");
+            assertThat(currenciesSettings.currencies.get(1).id).isEqualTo("b6a5f982-2900-4bea-9acc-9976831b2bd9");
+        }
+
+
     }
 }

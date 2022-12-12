@@ -1,0 +1,15 @@
+{
+    "currencies": [
+        {
+            "currencyCode": "ALL",
+            "id": "e69bb7cf-d0b1-4be5-9319-edd6447091cb"
+        },
+        {
+            "currencyCode": "AMD",
+            "id": "b6a5f982-2900-4bea-9acc-9976831b2bd9"
+        }
+    ],
+    "isFixedRate": true,
+    "isGameFiat": false,
+    "isViewFiat": true
+}
